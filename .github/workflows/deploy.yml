@@ -34,8 +34,16 @@ jobs:
             APP_ROOT="/var/www"
             APP_NAME="testBackPyTemplate"
             APP_DIR="${APP_ROOT}/${APP_NAME}"
-            REPO_URL="git@github.com:alexansaa/testBackPyTemplate.git"
+            REPO_URL="git@github.com:<YOUR_USER>/testBackPyTemplate.git"
             BRANCH="main"
+
+            echo "[DEPLOY] Preparing SSH known_hosts for github.com..."
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            if ! grep -q "github.com" ~/.ssh/known_hosts 2>/dev/null; then
+              ssh-keyscan github.com >> ~/.ssh/known_hosts
+              chmod 600 ~/.ssh/known_hosts
+            fi
 
             echo "[DEPLOY] Ensuring base directory ${APP_ROOT} exists..."
             sudo mkdir -p "${APP_ROOT}"
@@ -68,7 +76,11 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
 
-            echo "[DEPLOY] Restarting FastAPI systemd service..."
-            sudo systemctl restart testBackPyTemplate.service
+            echo "[DEPLOY] Stopping any existing uvicorn process..."
+            # Kill previous uvicorn app if running (ignore errors if none)
+            pkill -f "uvicorn app.main:app" || true
 
-            echo "[DEPLOY] ✅ Deployment completed."
+            echo "[DEPLOY] Starting uvicorn in background on port 8000..."
+            nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 &
+
+            echo "[DEPLOY] ✅ Deployment completed. Uvicorn should now be running on port 8000."
