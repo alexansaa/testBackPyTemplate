@@ -78,9 +78,9 @@ jobs:
 
             echo "[DEPLOY] Stopping any existing uvicorn process..."
             # Kill previous uvicorn app if running (ignore errors if none)
-            pkill -f "uvicorn app.main:app" || true
+            pkill -x unicorn || true
 
-            echo "[DEPLOY] Starting uvicorn in background on port 8000..."
-            nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 &
+            echo "[DEPLOY] Starting uvicorn in background on port 3000..."
+            nohup uvicorn app.main:app --host 0.0.0.0 --port 3000 > uvicorn.log 2>&1 &
 
             echo "[DEPLOY] ✅ Deployment completed. Uvicorn should now be running on port 8000."
