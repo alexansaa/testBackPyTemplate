@@ -69,6 +69,6 @@ jobs:
             pip install -r requirements.txt
 
             echo "[DEPLOY] Restarting FastAPI systemd service..."
-            sudo systemctl restart fastapi-backend.service
+            sudo systemctl restart testBackPyTemplate.service
 
             echo "[DEPLOY] ✅ Deployment completed."
