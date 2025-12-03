@@ -32,7 +32,7 @@ jobs:
             set -euo pipefail
 
             APP_ROOT="/var/www"
-            APP_NAME="fastapi-backend"
+            APP_NAME="testBackPyTemplate"
             APP_DIR="${APP_ROOT}/${APP_NAME}"
             REPO_URL="git@github.com:alexansaa/testBackPyTemplate.git"
             BRANCH="main"
